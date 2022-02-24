@@ -1,3 +1,0 @@
-from inside of file 2
-
-edited second time
