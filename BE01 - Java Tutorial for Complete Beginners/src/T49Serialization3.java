@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 import java.util.logging.*;
 
-public class T49Serialization2 {
+public class T49Serialization3 {
     public static void main(String args[]){
         Applied a = new Applied("ABC", Gender.men, 25);
         System.out.println(a);
@@ -16,13 +16,15 @@ public class T49Serialization2 {
         read();
     }
     
-    static void write(Object ... o){
+    static void write(Applied ... o){
+        ArrayList<Applied> ar = new ArrayList<Applied>();
+        for(Applied obj: o){
+            ar.add(obj);
+        }
         try(FileOutputStream fos = new FileOutputStream("src/applied.bin")){
             
             ObjectOutputStream oos = new ObjectOutputStream(fos);
-            for(Object obj: o)
-                oos.writeObject(obj);
-            
+            oos.writeObject(ar);
             oos.close();
             System.out.println("Serialization complete!");
             
@@ -38,23 +40,13 @@ public class T49Serialization2 {
             ObjectInputStream ois = new ObjectInputStream(fis);
             Applied o;
             
-            while(true){
-                try{
-                    o = (Applied) ois.readObject();
-                }
-                catch(RuntimeException re){
-                    ois.close();
-                    return;
-                }
-                System.out.println(o);
-            }
+            ArrayList<Applied> ar = (ArrayList<Applied>)ois.readObject();
+            ois.close();
             
-        } catch (FileNotFoundException ex) {
+            System.out.println("Total items: "+ar.size());
+            for(int i=0; i<ar.size(); i++)
+                System.out.println(ar.get(i));
             
-        } catch (IOException ex) {
-            
-        } catch (ClassNotFoundException ex) {
-            
-        }
+        } catch (FileNotFoundException ex) { } catch (IOException ex) { } catch (ClassNotFoundException ex) { }
     }
 }
